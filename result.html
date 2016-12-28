@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>网络安全周在线有奖答题</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="shortcut icon" href="images/logo.ico" />
+		<style type="text/css">
+			#list {
+				/*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+				margin-top: -1px;
+				margin-bottom: 0px;
+			}
+		</style>
+		<style type="text/css">
+			.bodyBackgrount {
+				background: url(images/background2.jpeg) no-repeat;
+				background-size: auto;
+				filter: alpha(opacity=90);
+				-moz-opacity: 0.9;
+				-khtml-opacity: 0.9;
+				opacity: 0.9;
+			}
+		</style>
+	</head>
+
+	<body class="">
+		<div class="mui-content" id="dadui" style="display: none;">
+			<div class="mui-content-padded" id="info">
+				<p>恭喜你，全部回答正确了，输入姓名和手机号领取流量。<span id="xlh"></span></p>
+			</div>
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>姓名</label>
+					<input id='name' type="text" class="mui-input-clear mui-input" placeholder="请输入姓名">
+				</div>
+				<div class="mui-input-row">
+					<label>手机</label>
+					<input id='phone' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号码">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id="kaishidati" onclick="getFlows();" type="button" class="mui-btn mui-btn-success mui-btn-block" style="padding: 5px;background-color:#9dbd85;border-color:#9dbd85;">领取</button>
+			</div>
+			<div id="loading"></div>
+		</div>
+
+		<div class="mui-content" id="dacuo" style="display: none;">
+			<div class="mui-content-padded" id="dacuoinfo">
+				<p>真可惜，没有全部正确，再答一次吧。</p>
+			</div>
+			<div class="mui-content-padded" id="dacuomessage">
+			</div>
+			<div class="mui-content-padded">
+				<button id="kaishidati" onclick="window.location.href='dati.html'" type="button" class="mui-btn mui-btn-success mui-btn-block" style="padding: 5px;background-color:#9dbd85;border-color:#9dbd85;">开始答题</button>
+			</div>
+		</div>
+
+		<div class="mui-content" id="fenxiang" style="display: none;">
+			<div class="mui-content-padded" id="fenxianginfo">
+			</div>
+			<div class="mui-content-padded">
+				<button id="kaishidati" onclick="" type="button" class="mui-btn mui-btn-success mui-btn-block" style="padding: 5px;background-color:#9dbd85;border-color:#9dbd85;">分享</button>
+			</div>
+		</div>
+		<div class="mui-content-padded">
+			<div class="bdsharebuttonbox" data-tag="share_1">
+				<a href="#" class="bds_more" data-cmd="more"></a>
+				<a class="bds_weixin" data-cmd="weixin"></a>
+				<a class="bds_qzone" data-cmd="qzone" href="#"></a>
+				<a class="bds_tsina" data-cmd="tsina"></a>
+				<a class="bds_tqq" data-cmd="tqq"></a>
+			</div>
+		</div>
+		
+		
+		<script>
+			window._bd_share_config = {
+				common: {
+					bdText: '网络安全周有奖答题，全部正确获得500M流量，快来答题吧。',
+					bdDesc: '网络安全周有奖答题活动',
+					bdUrl: 'http://dt.shxca.gov.cn',
+					bdPic: 'http://dt.shxca.gov.cn/images/first.png'
+				},
+				share: [{
+					"bdSize": 32
+				}],
+				image: [{
+					viewType: 'collection',
+					viewPos: 'top',
+					viewColor: 'black',
+					viewSize: '32',
+					viewList: ['qzone', 'tsina', 'tqq','weixin'],
+					
+				}],
+				selectShare: [{
+					"bdselectMiniList": ['qzone', 'tqq', 'kaixin001', 'bdxc', 'tqf']
+				}]
+			}
+			with(document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];
+		</script>
+
+		<script src="js/mui.min.js"></script>
+
+		<script type="text/javascript" charset="utf-8">
+			// dom准备好后获取数据
+			mui.ready(function() {
+				// console.log(location.hash);
+				var xlh = location.hash;
+				// var xlh = stripscript(location.hash);
+				// console.log(xlh);
+				xlh = xlh.substr(1, xlh.length);
+				xlh = xlh.split("&");
+				if (xlh[0] == 1) {
+					document.getElementById("xlh").innerHTML = "序列号为：" + xlh[1] + "。";
+					document.getElementById("dadui").style.display = "";
+				} else {
+					xlh[1] = stripscript(decodeURI(xlh[1]));
+					xlh[1] = xlh[1].replace(new RegExp(/br/g),"<br/>");
+					document.getElementById("dacuomessage").innerHTML = "<p>" + xlh[1] + "<p/>";
+					document.getElementById("dacuo").style.display = "";
+				}
+			});
+
+			function getFlows() {
+				var nameStr = document.getElementById("name").value;
+				if (nameStr == '') {
+					mui.toast("请输入姓名。");
+					return;
+				}
+				var phoneStr = document.getElementById("phone").value;
+				if (phoneStr == '') {
+					mui.toast("请输入手机号码。");
+					return;
+				}
+				if (phoneStr.length != 11) {
+					mui.toast("手机号码位数不正确，请重新填写11位号码。");
+					return;
+				}
+				var xlh = stripscript(location.hash);
+				xlh = xlh.substr(0, xlh.length);
+				xlh = xlh.split("&");
+				xlhStr = xlh[1];
+				// loading 
+				document.getElementById("loading").innerHTML = loadingDiv();
+				mui.ajax('getFlows.php', {
+					data: {
+						name: nameStr,
+						phone: phoneStr,
+						xlh: xlhStr
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						//服务器返回响应，根据响应结果，分析是否登录成功；
+						// console.log(data);
+						document.getElementById("fenxiang").style.display = "";
+						document.getElementById("dadui").style.display = "none";
+						document.getElementById("fenxianginfo").innerHTML = "<p>" + data["message"] + "</p>";
+						document.getElementById("loading").innerHTML = "";
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						// console.log(type);
+						document.getElementById("loading").innerHTML = "";
+					}
+				});
+			}
+
+			function stripscript(s) {
+				var pattern = new RegExp("[%`~!@#$^*()=|{}':;',\\[\\].<>/?~！@#￥……*——| {}‘；']") //格式 RegExp("[在中间定义特殊过滤字符]")
+				var rs = "";
+				for (var i = 0; i < s.length; i++) {
+					rs = rs + s.substr(i, 1).replace(pattern, '');
+				}
+				return rs;
+			}
+
+			// 继续loading
+			function loadingDiv() {
+				var html = "<div class=\"mui-content-padded\" style=\"text-align:center\">";
+				html += "<p>&nbsp;</p><img src=\"images/loading3.gif\" /><p>loading...</p><p>&nbsp;</p>";
+				html += "</div>";
+				return html;
+			}
+		</script>
+	</body>
+
+</html>

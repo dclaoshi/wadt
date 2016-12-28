@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>网络安全周在线有奖答题</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="shortcut icon" href="images/logo.ico" />
+		<style type="text/css">
+			#list {
+				/*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+				margin-top: -1px;
+				margin-bottom: 0px;
+			}
+		</style>
+		<style type="text/css">
+			.bodyBackgrount {
+				background: url(images/background2.jpeg) no-repeat;
+				background-size: auto;
+				filter: alpha(opacity=90);
+				-moz-opacity: 0.9;
+				-khtml-opacity: 0.9;
+				opacity: 0.9;
+			}
+		</style>
+	</head>
+
+	<body class="">
+		<div class="mui-content ">
+			<div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop">
+					<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+							<img src="images/ratian.jpg">
+							<p class="mui-slider-title">让服务守护安全</p>
+						</a>
+					</div>
+
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="images/first.png">
+							<p class="mui-slider-title">网络安全知识答题</p>
+						</a>
+					</div>
+
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="images/sncert.png">
+							<p class="mui-slider-title">陕西省互联网应急中心</p>
+						</a>
+					</div>
+
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="images/2.jpg">
+							<p class="mui-slider-title">xxxxx</p>
+						</a>
+					</div>
+
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="images/2.jpg">
+							<p class="mui-slider-title">xxxx</p>
+						</a>
+					</div>
+
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="images/2.jpg">
+							<p class="mui-slider-title">xxxxx</p>
+						</a>
+					</div>
+
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="images/2.jpg">
+							<p class="mui-slider-title">xxxx</p>
+						</a>
+					</div>
+
+					<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+							<img src="images/first.png">
+							<p class="mui-slider-title">安全知识答题</p>
+						</a>
+					</div>
+
+				</div>
+				<div class="mui-slider-indicator mui-text-right">
+					<div class="mui-indicator mui-active"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+					<div class="mui-indicator"></div>
+				</div>
+			</div>
+
+			<div class="mui-content-padded">
+				<p>1. 此次答题为了普及网络安全知识，增强我国网民网络安全意识。</p>
+				<p>2. 此次答题共10道题目，全部答对即可获取500M流量(仅限陕西省用户)，活动结束后统一发放。</p>
+				<p>3. 此次答题活动时间为2016年9月19日0时至2016年9月25日24时。</p>
+				<button id="kaishidati" onclick="window.location.href='dati.html'" type="button" class="mui-btn mui-btn-success mui-btn-block" style="padding: 5px;background-color:#9dbd85;border-color:#9dbd85;">开始答题</button>
+			</div>
+
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			var slider = mui("#slider");
+			slider.slider({
+				interval: 5000
+			});
+		</script>
+
+	</body>
+
+</html>

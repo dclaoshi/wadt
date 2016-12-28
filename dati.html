@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="shortcut icon" href="images/logo.ico" />
+		<style type="text/css">
+			#list {
+				/*避免导航边框和列表背景边框重叠，看起来像两条边框似得；*/
+				margin-top: -1px;
+				margin-bottom: 0px;
+			}
+		</style>
+		<style type="text/css">
+			/*.bodyBackgrount {
+				background: url(images/background2.jpeg) no-repeat;
+				background-size: auto;
+				filter: alpha(opacity=90);
+				-moz-opacity: 0.9;
+				-khtml-opacity: 0.9;
+				opacity: 0.9;
+			}*/
+			.myinput{
+
+			}
+		</style>
+	</head>
+
+	<body style="background: transparent;">
+		<div class="mui-content" id="questionCardDiv">
+			<!--
+			<div class="mui-content-padded"></div>
+			<div class="mui-card">
+				<div class="mui-table-view-cell mui-collapse mui-active">
+					<a class="mui-navigate-right">题目1</a>
+					<div class="mui-collapse-content">
+						<h4>
+						题目描述题目描述题目描述题目描述题目描述题目描述题目描述题目描述
+						</h4>
+						<div class="mui-content-padded"></div>
+						<div class="mui-input-group">
+							<div class="mui-input-row mui-radio">
+								<label>radio</label>
+								<input name="radio1" type="radio">
+							</div>
+							<div class="mui-input-row mui-radio">
+								<label>radio</label>
+								<input name="radio1" type="radio">
+							</div>
+							<div class="mui-input-row mui-radio">
+								<label>disabled radio</label>
+								<input name="radio1" type="radio">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mui-content-padded">
+				<button id="kaishidati" onclick="submitAnswers();" type="button" class="mui-btn mui-btn-success mui-btn-block" style="padding: 5px;background-color:#9dbd85;border-color:#9dbd85;">提交答案</button>
+			</div>
+			-->
+			<div class="mui-content-padded" style="text-align:center">
+				<p>&nbsp;</p>
+				<img src="images/loading3.gif" />
+				<p>loading...</p>
+				<p>&nbsp;</p>
+			</div>
+		</div>
+
+		<div class="mui-content" id="imageDiv">
+			<div class="mui-content-padded">
+				<p>1. 此次答题的目标是为了普及网络安全知识。</p>
+				<p>2. 此次答题共10道题目，全部答对即可获取500M流量(仅限陕西省用户)。</p>
+			</div>
+		</div>
+
+		<script src="js/mui.min.js"></script>
+
+		<script type="text/javascript" charset="utf-8">
+			var questionsLength = 0;
+			var currentQuestionIndex = 0;
+			var questionsJson;
+			var answersArray = new Array();
+			var questionCardDiv = document.getElementById("questionCardDiv");
+
+			// 继续loading
+			function loadingDiv() {
+				var html = "<div class=\"mui-content-padded\" style=\"text-align:center\">";
+				html += "<p>&nbsp;</p><img src=\"images/loading3.gif\" /><p>loading...</p><p>&nbsp;</p>";
+				html += "</div>";
+				return html;
+			}
+			function getQuestionHTML2() {
+				var html = "";
+				html += "<div class=\"mui-content-padded\"></div>";
+				html += "<div class=\"mui-card\">";
+				html += "<div class=\"mui-table-view-cell mui-collapse mui-active\">";
+				html += "<a class=\"mui-navigate-right\">题目" + (currentQuestionIndex + 1) + "（共" + questionsLength + "题目）</a>";
+				html += "<div class=\"mui-collapse-content\">";
+				html += "<h4>" + questionsJson[currentQuestionIndex].content + "</h4>";
+				html += "<div class=\"mui-content-padded\"><p></p></div><div class=\"mui-input-group\">";
+				/*答案*/
+				var answerFront = 65;
+				var answerPerQuestion = 8;
+				var tmpAnswer = new Array();
+				tmpAnswer[0] = questionsJson[currentQuestionIndex].answer1;
+				tmpAnswer[1] = questionsJson[currentQuestionIndex].answer2;
+				tmpAnswer[2] = questionsJson[currentQuestionIndex].answer3;
+				tmpAnswer[3] = questionsJson[currentQuestionIndex].answer4;
+				tmpAnswer[4] = questionsJson[currentQuestionIndex].answer5;
+				tmpAnswer[5] = questionsJson[currentQuestionIndex].answer6;
+				tmpAnswer[6] = questionsJson[currentQuestionIndex].answer7;
+				tmpAnswer[7] = questionsJson[currentQuestionIndex].answer8;
+
+				for (var i=1;i<=answerPerQuestion;i++) {
+					if(tmpAnswer[i-1]!=''){
+						html += "<div style=\"height:auto\" class=\"mui-input-row mui-radio \">";
+						html += "<div style=\"margin-left:5%;margin-top: 10px;float:left\">" + String.fromCharCode(answerFront) +"."+ "</div>";
+						html += "<div style=\"width:65%;margin-left:15%;margin-top: 10px;margin-bottom: 10px;\">" + tmpAnswer[i-1] + "</div>";
+						html += "<input  style=\"margin-top: 5px \" name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + i + "\"";
+						if (answersArray[currentQuestionIndex] == i) {
+							html += " checked >";
+						} else {
+							html += "  >";
+						}
+						html += "</div>";
+						answerFront++;
+					}
+				}
+
+				/**/
+				html += "</div>";
+				html += "</div>";
+				html += "</div>";
+				/*按钮*/
+				html += "<div class=\"mui-content-padded\"";
+				if (currentQuestionIndex == 0) {
+					html += " style=\"display:none;\"";
+				}
+				html += ">";
+				html += "<button id=\"previousbtn\" onclick=\"setPreviousQuestionToDiv();\" type=\"button\" class=\"mui-btn mui-btn-success mui-btn-block\" style=\"padding: 5px;background-color:#9dbd85;border-color:#9dbd85;\">上一题</button>";
+				html += "</div>";
+				html += "<div class=\"mui-content-padded\"";
+				if (currentQuestionIndex == questionsLength - 1) {
+					html += " style=\"display:none;\"";
+				}
+				html += ">";
+				html += "<button id=\"nextbtn\" onclick=\"setNextQuestionToDiv();\" type=\"button\" class=\"mui-btn mui-btn-success mui-btn-block\" style=\"padding: 5px;background-color:#9dbd85;border-color:#9dbd85;\">下一题</button>";
+				html += "</div>";
+				html += "<div class=\"mui-content-padded\"";
+				if (currentQuestionIndex != questionsLength - 1) {
+					html += " style=\"display:none;\"";
+				}
+				html += ">";
+				html += "<button id=\"kaishidati\" onclick=\"submitAnswers();\" type=\"button\" class=\"mui-btn mui-btn-success mui-btn-block\" style=\"padding: 5px;background-color:#9dbd85;border-color:#9dbd85;\">提交答案</button>";
+				html += "</div>";
+				return html;
+			}
+			// 生成题目html
+			function getQuestionHTML() {
+				var html = "";
+				html += "<div class=\"mui-content-padded\"></div>";
+				html += "<div class=\"mui-card\">";
+				html += "<div class=\"mui-table-view-cell mui-collapse mui-active\">";
+				html += "<a class=\"mui-navigate-right\">题目" + (currentQuestionIndex + 1) + "（共" + questionsLength + "题目）</a>";
+				html += "<div class=\"mui-collapse-content\">";
+				html += "<h4>" + questionsJson[currentQuestionIndex].content + "</h4>";
+				html += "<div class=\"mui-content-padded\"><p></p></div><div class=\"mui-input-group\">";
+				/*答案*/
+				var answerId = 1;
+				var answerFront = 65;
+				if (questionsJson[currentQuestionIndex].answer1 != '') {
+					html += "<div style=\"height:55px\" class=\"mui-input-row mui-radio \">";
+					html += "<label>" + String.fromCharCode(answerFront) + ". " + questionsJson[currentQuestionIndex].answer1 + "</label>";
+					html += "<input  name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + answerId + "\"";
+					if (answersArray[currentQuestionIndex] == 1) {
+						html += " checked >";
+					} else {
+						html += "  >";
+					}
+					html += "</div>";
+				}
+				answerId++;
+				answerFront++;
+				if (questionsJson[currentQuestionIndex].answer2 != '') {
+					html += "<div style=\"height:55px\" class=\"mui-input-row mui-radio\">";
+					html += "<label>" + String.fromCharCode(answerFront) + ". " + questionsJson[currentQuestionIndex].answer2 + "</label>";
+					html += "<input  name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + answerId + "\"";
+					if (answersArray[currentQuestionIndex] == 2) {
+						html += " checked >";
+					} else {
+						html += "  >";
+					}
+					html += "</div>";
+				}
+				answerId++;
+				answerFront++;
+				if (questionsJson[currentQuestionIndex].answer3 != '') {
+					html += "<div style=\"height:55px\" class=\"mui-input-row mui-radio\">";
+					html += "<label>" + String.fromCharCode(answerFront) + ". " + questionsJson[currentQuestionIndex].answer3 + "</label>";
+					html += "<input  name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + answerId + "\"";
+					if (answersArray[currentQuestionIndex] == 3) {
+						html += " checked >";
+					} else {
+						html += "  >";
+					}
+					html += "</div>";
+				}
+				answerId++;
+				answerFront++;
+				if (questionsJson[currentQuestionIndex].answer4 != '') {
+					html += "<div style=\"height:55px\" class=\"mui-input-row mui-radio\">";
+					html += "<label>" + String.fromCharCode(answerFront) + ". " + questionsJson[currentQuestionIndex].answer4 + "</label>";
+					html += "<input  name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + answerId + "\"";
+					if (answersArray[currentQuestionIndex] == 4) {
+						html += " checked >";
+					} else {
+						html += "  >";
+					}
+					html += "</div>";
+				}
+				answerId++;
+				answerFront++;
+				if (questionsJson[currentQuestionIndex].answer5 != '') {
+					html += "<div style=\"height:55px\" class=\"mui-input-row mui-radio\">";
+					html += "<label>" + String.fromCharCode(answerFront) + ". " + questionsJson[currentQuestionIndex].answer5 + "</label>";
+					html += "<input  name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + answerId + "\"";
+					if (answersArray[currentQuestionIndex] == 5) {
+						html += " checked >";
+					} else {
+						html += "  >";
+					}
+					html += "</div>";
+				}
+				answerId++;
+				answerFront++;
+				if (questionsJson[currentQuestionIndex].answer6 != '') {
+					html += "<div style=\"height:55px\" class=\"mui-input-row mui-radio\">";
+					html += "<label>" + String.fromCharCode(answerFront) + ". " + questionsJson[currentQuestionIndex].answer6 + "</label>";
+					html += "<input  name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + answerId + "\"";
+					if (answersArray[currentQuestionIndex] == 6) {
+						html += " checked >";
+					} else {
+						html += "  >";
+					}
+					html += "</div>";
+				}
+				answerId++;
+				answerFront++;
+				if (questionsJson[currentQuestionIndex].answer7 != '') {
+					html += "<div style=\"height:55px\" class=\"mui-input-row mui-radio\">";
+					html += "<label>" + String.fromCharCode(answerFront) + ". " + questionsJson[currentQuestionIndex].answer7 + "</label>";
+					html += "<input name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + answerId + "\"";
+					if (answersArray[currentQuestionIndex] == 7) {
+						html += " checked >";
+					} else {
+						html += "  >";
+					}
+					html += "</div>";
+				}
+				answerId++;
+				answerFront++;
+				if (questionsJson[currentQuestionIndex].answer8 != '') {
+					html += "<div style=\"height:55px\" class=\"mui-input-row mui-radio\">";
+					html += "<label>" + String.fromCharCode(answerFront) + ". " + questionsJson[currentQuestionIndex].answer8 + "</label>";
+					html += "<input  name=\"radio" + (currentQuestionIndex + 1) + "\" type=\"radio\" value=\"" + answerId + "\"";
+					if (answersArray[currentQuestionIndex] == 8) {
+						html += " checked >";
+					} else {
+						html += "  >";
+					}
+					html += "</div>";
+				}
+				/**/
+				html += "</div>";
+				html += "</div>";
+				html += "</div>";
+				/*按钮*/
+				html += "<div class=\"mui-content-padded\"";
+				if (currentQuestionIndex == 0) {
+					html += " style=\"display:none;\"";
+				}
+				html += ">";
+				html += "<button id=\"previousbtn\" onclick=\"setPreviousQuestionToDiv();\" type=\"button\" class=\"mui-btn mui-btn-success mui-btn-block\" style=\"padding: 5px;background-color:#9dbd85;border-color:#9dbd85;\">上一题</button>";
+				html += "</div>";
+				html += "<div class=\"mui-content-padded\"";
+				if (currentQuestionIndex == questionsLength - 1) {
+					html += " style=\"display:none;\"";
+				}
+				html += ">";
+				html += "<button id=\"nextbtn\" onclick=\"setNextQuestionToDiv();\" type=\"button\" class=\"mui-btn mui-btn-success mui-btn-block\" style=\"padding: 5px;background-color:#9dbd85;border-color:#9dbd85;\">下一题</button>";
+				html += "</div>";
+				html += "<div class=\"mui-content-padded\"";
+				if (currentQuestionIndex != questionsLength - 1) {
+					html += " style=\"display:none;\"";
+				}
+				html += ">";
+				html += "<button id=\"kaishidati\" onclick=\"submitAnswers();\" type=\"button\" class=\"mui-btn mui-btn-success mui-btn-block\" style=\"padding: 5px;background-color:#9dbd85;border-color:#9dbd85;\">提交答案</button>";
+				html += "</div>";
+				return html;
+			}
+
+			// 存储用户对当前题目的答案
+			function scoreCurrentQuestionResult() {
+				radios = document.getElementsByName("radio" + (currentQuestionIndex + 1));
+				for (var i = 0; i < radios.length; i++) {
+					if (radios[i].checked) {
+						answersArray[currentQuestionIndex] = radios[i].value;
+						break;
+					}
+				}
+			}
+
+			// 生成上一题的html
+			function setPreviousQuestionToDiv() {
+				//console.log(currentQuestionIndex + "|" + questionsLength);
+				scoreCurrentQuestionResult();
+				currentQuestionIndex--;
+				questionCardDiv.innerHTML = getQuestionHTML2();
+
+			}
+
+			// 生成下一题的html
+			function setNextQuestionToDiv() {
+				//console.log(currentQuestionIndex + "|" + questionsLength);
+				scoreCurrentQuestionResult();
+				currentQuestionIndex++;
+				questionCardDiv.innerHTML = getQuestionHTML2();
+			}
+
+			// dom准备好后获取数据
+			mui.ready(function() {
+				mui.ajax('getQuestion.php', {
+					data: {},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						//服务器返回响应，根据响应结果，分析是否登录成功；
+						//console.log(data);
+						questionsJson = data;
+						questionsLength = questionsJson.length;
+						for (var i = 0; i < questionsLength; i++) {
+							answersArray[i] = 0;
+						}
+						document.getElementById("questionCardDiv").innerHTML = getQuestionHTML2();
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			});
+
+			// 验证是否有题没有做
+			function validAnswers() {
+				for (var i = 0; i < questionsLength; i++) {
+					if (answersArray[i] == 0) {
+						mui.toast("题目" + (i + 1) + "没有回答，请回答该问题");
+						return false;
+					}
+				}
+				return true;
+			}
+
+			// 将答案打包成json
+			function generateAnswerJson() {
+				console.log("generateAnswerJson");
+				jsonStr = "[";
+				for (var i = 0; i < questionsLength; i++) {
+					jsonStr += "{\"id\":" + questionsJson[i].id + ",\"answer\":" + answersArray[i] + "},"
+				}
+				jsonStr = jsonStr.substr(0, jsonStr.length - 1);
+				jsonStr += "]";
+				console.log(jsonStr);
+				return jsonStr;
+			}
+
+			// 提交答案
+			function submitAnswers() {
+				scoreCurrentQuestionResult(); //存储最后一题的结果
+				if (validAnswers()) {
+					generateAnswerJson();
+					document.getElementById("questionCardDiv").innerHTML = loadingDiv();
+					mui.ajax('checkAnswer.php', {
+						data: {
+							data: jsonStr
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							//服务器返回响应，根据响应结果，分析是否登录成功；
+							console.log(data);
+							window.location.href = "result.html#" + data.code + "&" + data.message;
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							mui.toast(type);
+						}
+					});
+				}
+			}
+		</script>
+
+		<script>
+		</script>
+	</body>
+
+</html>
